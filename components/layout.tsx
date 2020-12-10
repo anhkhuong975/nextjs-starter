@@ -3,7 +3,7 @@ import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 
-const name = '[Your Name]'.split("").reverse().join("");
+const name = '[Your Name]'
 export const siteTitle = 'Next.js Sample Website'
 
 export default function Layout({
@@ -29,13 +29,12 @@ export default function Layout({
         />
         <meta name="og:title" content={siteTitle} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="google-site-verification" content="17Xsm16H08jVq1YOLcTZyRnzWGdIEcdxN1ae7ZLzoI4" />
       </Head>
       <header className={styles.header}>
         {home ? (
           <>
             <img
-              // src="/images/profile.jpg"
+              src="/images/profile.jpg"
               className={`${styles.headerHomeImage} ${utilStyles.borderCircle}`}
               alt={name}
             />
@@ -46,7 +45,7 @@ export default function Layout({
             <Link href="/">
               <a>
                 <img
-                  // src="/images/profile.jpg"
+                  src="/images/profile.jpg"
                   className={`${styles.headerImage} ${utilStyles.borderCircle}`}
                   alt={name}
                 />
