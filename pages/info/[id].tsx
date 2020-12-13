@@ -2,16 +2,11 @@ import {GetStaticPaths, GetStaticProps} from "next";
 import * as axios from "axios";
 import React from "react";
 import MainLayout from "../../components/layout/main-layout";
-import {counter, HeaderActions} from "../../store/header.action";
-import {bindActionCreators, Dispatch} from "redux";
-import {connect} from "react-redux";
-import ErrorPage from "next/error";
-import { withRouter } from 'next/router';
 
 export const getStaticPaths: GetStaticPaths = async () => {
     const allProd = await axios.default({
         method: 'GET',
-        url: 'https://eco-be.herokuapp.com/products/get-all/',
+        url: 'http://eco-be.herokuapp.com/products/get-all/',
     })
     const paths = allProd.data.map(item => {
         return {
@@ -20,49 +15,37 @@ export const getStaticPaths: GetStaticPaths = async () => {
     });
     return {
         paths,
-        fallback: true,
+        fallback: false,
     }
 }
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
     const res = await axios.default({
-        method: 'GET',
-        url: 'https://eco-be.herokuapp.com/products/get-one/' + params.id,
+        method: 'get',
+        url: 'http://eco-be.herokuapp.com/products/get-one/' + params.id,
     })
     return {
         props: {
             products: res.data,
-        },
-        revalidate: 10
+        }
     }
 }
 
-interface PropsInfo {
+interface Props {
     products: any[],
-    router: any,
 }
 
 interface State {
-    bodyCount: number
+    products: any[],
 }
 
-export class Info extends React.Component<Props, State>{
-    // const router = useRouter();
-    constructor(props) {
+export default class Info extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
         this.state = {
-            bodyCount: 0,
+            products: [],
         }
-        this.onClickUpdateBodyCounter = this.onClickUpdateBodyCounter.bind(this);
     }
-
-
-    onClickUpdateBodyCounter() {
-        this.setState({
-            bodyCount: this.state.bodyCount + 1
-        })
-    }
-
 
     /**
      * INIT && UPDATED
@@ -74,7 +57,9 @@ export class Info extends React.Component<Props, State>{
      * @return object state
      */
     static getDerivedStateFromProps(props: Props, state: State) {
-        return state
+        return {
+            products: props.products,
+        };
     }
 
     /**
@@ -85,6 +70,7 @@ export class Info extends React.Component<Props, State>{
      * @return void
      */
     componentDidMount() {
+        console.log("component did mount");
     }
 
     /**
@@ -95,40 +81,25 @@ export class Info extends React.Component<Props, State>{
     componentDidUpdate() {
     }
 
+
     /**
-     * @description render to html and js
+     * INIT && UPDATED
+     * @description render tsx to html
+     *
      */
     render() {
-        if (this.props.router.isFallback) {
-            return <div>loading...</div>
-        }
-        if (!this.props.products[0]) {
-            console.log("IN ERROR PAGE")
-            return <ErrorPage statusCode={404} />
-        }
         const elem = (
             <div className='info-container'>
                 <h1>INFO</h1>
                 <ul>{
-                    this.props.products.map((product, index) => (
+                    this.state.products.map((product, index) => (
                         <li key={index}>{product.name.split("").reverse().join("")}</li>
                     ))
                 }</ul>
-                <button onClick={this.props.counter}>update header counter</button>
-                <div>
-                    <button onClick={this.onClickUpdateBodyCounter}>update body counter</button>
-                    <div>Body counter: <span>{this.state.bodyCount}</span></div>
-                </div>
             </div>
         );
-        return (<MainLayout child={elem}/>);
+        return (
+            <MainLayout child={elem}/>
+        );
     }
 }
-
-
-const mapDispatchToProps = (dispatch: Dispatch<HeaderActions>) =>
-    bindActionCreators({ counter }, dispatch);
-
-type Props = PropsInfo & ReturnType<typeof mapDispatchToProps>;
-
-export default connect(() => {return {}}, mapDispatchToProps)(withRouter(Info));
