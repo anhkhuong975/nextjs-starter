@@ -5,6 +5,7 @@ import React from "react";
 import '../styles/home.scss'
 import {wrapper} from "../store/root-reducer";
 
+// const store = createStore(combineReducers({HeaderReducer}));
 const WrappedApp = ({ Component, pageProps }) => {
     return <Component {...pageProps} />
 }
