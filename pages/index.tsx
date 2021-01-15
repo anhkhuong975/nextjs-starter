@@ -1,9 +1,11 @@
 import {DbsGroup} from "../components/dbs-group";
 import React from "react";
 import Head from 'next/head';
+import {TestB} from "../components/test/test-b";
+import TestA from "../components/test/test-a";
 
 
-export default function Home({}: {
+export function Home({}: {
   allPostsData: {
     date: string
     title: string
@@ -25,7 +27,11 @@ export default function Home({}: {
                 }}
             />
         </Head>
-        <DbsGroup/>
+        {/*<DbsGroup/>*/}
+        <TestA/>
+        <TestB/>
       </div>
   )
 }
+
+export default Home;
