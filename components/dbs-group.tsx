@@ -17,7 +17,7 @@ export const URL = {
 }
 export const CONFIG_DATA = {
     ngayLuong: 5,
-    nextTetAm: new Date(2021, 2, 1)
+    nextTetAm: new Date(2022, 2, 1)
 }
 
 const override = css`
